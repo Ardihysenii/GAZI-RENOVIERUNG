@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Über uns | GAZI RENOVIERUNG</title>
+    <link rel="icon" type="image/png" th:href="@{/img/Unnamed(Logo).png}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <style>
+        /* --- KORRIGJIMET PËR FIXED NAVBAR --- */
+        body {
+            padding-top: 80px;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 10000;
+            transition: all 0.3s ease;
+        }
+
+        .logo img {
+            max-height: 50px;
+            width: auto;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 60px;
+            }
+
+            .nav-container {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                position: relative;
+                width: 100%;
+                padding: 10px 15px;
+                z-index: 10001;
+            }
+
+            .logo {
+                position: relative;
+                z-index: 10005;
+            }
+
+            .logo img {
+                max-height: 30px;
+            }
+
+            .menu-toggle {
+                display: flex !important;
+                flex-direction: row;
+                align-items: center;
+                cursor: pointer;
+                z-index: 10005;
+                position: relative;
+                flex-grow: 1;
+            }
+
+            .menu-toggle .logo {
+                font-size: 1rem;
+                white-space: nowrap;
+                font-family: 'Montserrat', sans-serif;
+                font-weight: 500;
+                letter-spacing: 1px;
+                margin-left: 10px;
+                flex-grow: 1;
+                text-align: left;
+            }
+
+            .hamburger-lines {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                margin-left: auto;
+            }
+
+            .menu-toggle span {
+                width: 25px;
+                height: 2px;
+                background-color: #1a1a1a;
+                transition: 0.3s ease;
+                display: block;
+            }
+
+            #nav-list.nav-links {
+                display: flex !important;
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 100%;
+                height: 100vh;
+                background-color: #ffffff;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+                z-index: 9998;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+
+            #nav-list.nav-links.active {
+                right: 0 !important;
+            }
+
+            .nav-links li {
+                margin: 20px 0;
+                opacity: 0;
+            }
+
+            .nav-links.active li {
+                opacity: 1;
+                transition: opacity 0.4s ease 0.3s;
+            }
+
+            .nav-links li a {
+                font-family: 'Playfair Display', serif;
+                font-size: 2rem;
+                color: #1a1a1a;
+                text-decoration: none;
+            }
+
+            .nav-cta {
+                display: none !important;
+            }
+
+            .menu-toggle.open .hamburger-lines span:nth-of-type(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+            .menu-toggle.open .hamburger-lines span:nth-of-type(2) {
+                opacity: 0;
+            }
+            .menu-toggle.open .hamburger-lines span:nth-of-type(3) {
+                transform: rotate(-45deg) translate(5px, -5px);
+            }
+
+            body.no-scroll {
+                overflow: hidden;
+            }
+        }
+
+        /* --- CONTENT STYLES --- */
+        :root { --gold: #b8860b; --cream: #fcf9f2; --dark: #1a1a1a; }
+        .about-intro { background-color: var(--cream); padding: 80px 0; text-align: center; }
+        .about-intro h1 { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--dark); margin-bottom: 20px; }
+        .about-intro p { max-width: 800px; margin: 0 auto; line-height: 1.8; font-size: 1.1rem; color: #555; padding: 0 20px; }
+
+        .about-offer { background-color: #ffffff; padding: 40px 0; overflow: hidden; }
+        .offer-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; align-items: center; gap: 30px; }
+
+        /* Reverse class per seksionin e dyte */
+        .offer-grid.reverse { grid-template-columns: 0.8fr 1.2fr; }
+
+        .offer-image img { width: 100%; height: auto; border-radius: 4px; display: block; background-color: #fff; }
+        .offer-text h2 { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin-bottom: 35px; color: var(--dark); }
+        .offer-text ul { list-style: none; padding: 0; }
+        .offer-text li { margin-bottom: 25px; display: flex; align-items: flex-start; gap: 12px; font-size: 1rem; line-height: 1.5; color: #333; }
+        .offer-text li::before { content: '▶'; color: var(--gold); font-size: 0.7rem; margin-top: 5px; }
+        .offer-text strong { display: block; font-weight: 600; margin-bottom: 2px; }
+
+        @media (max-width: 768px) {
+            .offer-grid, .offer-grid.reverse { grid-template-columns: 1fr; padding: 0 20px; }
+            .offer-image { order: 2; margin-top: 30px; }
+            .offer-text h2 { font-size: 2.2rem; }
+            .about-intro h1 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="container nav-container">
+        <div class="logo">
+            <a th:href="@{/}">
+                <img src="/img/logo.jpg" alt="Logo">
+            </a>
+        </div>
+
+        <div class="menu-toggle" id="mobile-menu">
+            <div class="logo">GAZI RENOVIERUNG</div>
+            <div class="hamburger-lines">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <nav>
+            <ul class="nav-links" id="nav-list">
+                <li><a th:href="@{/}">Startseite</a></li>
+                <li><a th:href="@{/portfolio}">Portfolio</a></li>
+                <li><a th:href="@{/#services}">Leistungen</a></li>
+                <li><a th:href="@{/#contact}">Kontakt</a></li>
+                <li><a th:href="@{/aboutus}" style="color: #b8860b;">Über uns</a></li>
+            </ul>
+        </nav>
+        <div class="nav-cta">
+            <a th:href="@{/#contact}" class="btn-outline">E-Mail senden</a>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="about-intro">
+        <div class="container">
+            <h1>Über uns</h1>
+            <p>
+                GAZI RENOVIERUNG ist mehr als nur ein Handwerksbetrieb. Wir sind ein Team von Visionären, die es sich zur Aufgabe gemacht haben, die architektonische Schönheit von Gebäuden durch hochwertige Renovierungen zu bewahren und zu veredeln. Unsere Leidenschaft für Details und unser Engagement für Qualität machen jedes Projekt zu einem Beweis unserer Expertise.
+
+                Unsere Philosophie geht über die Standardinstandhaltung hinaus. Wir betrachten jedes Objekt als ein wertvolles Gut, das Schutz und Erneuerung verdient. Durch den Einsatz modernster Techniken und erstklassiger Materialien garantieren wir Ergebnisse, die nicht nur ästhetisch überzeugen, sondern auch langfristige Beständigkeit bieten.
+
+                Bei uns steht das Vertrauen unserer Kunden an erster Stelle. Wir begleiten Sie mit transparenter Planung und fachmännischem Rat, um sicherzustellen, dass Ihre Vision von einer perfekten Immobilie Realität wird. Jede Renovierung ist für uns eine neue Chance, Exzellenz zu beweisen und den Wert Ihres Eigentums nachhaltig zu steigern.
+            </p>
+        </div>
+    </section>
+
+    <section class="about-offer">
+        <div class="container offer-grid">
+            <div class="offer-text">
+                <h2>Was uns auszeichnet</h2>
+                <ul>
+                    <li>
+                        <div>
+                            <strong>Exzellenz in jedem Detail:</strong>
+                            Wir garantieren präzise Arbeit und Verwendung hochwertigster Materialien.
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <strong>Kundenorientierter Service:</strong>
+                            Ihre Zufriedenheit steht bei uns an erster Stelle – von der Beratung bis zum Abschluss.
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <strong>Nachhaltigkeit & Wertsteigerung:</strong>
+                            Ihre Vision vom Planung wird Wirklichkeit. Erneuerung lässt Ihre Immobilie in neuem Glanz erstrahlen.
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <strong>Erfahrung & Kompetenz:</strong>
+                            Ein Team, das über jahrelange Erfahrung in der Sanierung und Werterhaltung verfügt.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="offer-image">
+                <img src="/img/unnamed (3.9).jpg" alt="Gazi Renovierung Van">
+            </div>
+        </div>
+    </section>
+
+    <section class="about-offer">
+        <div class="container offer-grid reverse">
+            <div class="offer-image">
+                <img src="/img/unnamed (3).jpg" alt="Gazi Renovierung Van" style="max-width: 100%; height: auto; background-color: #fff;">
+            </div>
+            <div class="offer-text">
+                <h2>Qualität, die überzeugt</h2>
+                <ul>
+                    <li>
+                        <div>
+                            <strong>Meisterhafte Handwerkskunst:</strong>
+                            Jeder Pinselstrich dhe çdo detaj ekzekutohet me saktësi gjermane dhe pasion për bukurinë.
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <strong>Individuelle Lösungen:</strong>
+                            Wir passen unsere Techniken genau an die Bedürfnisse Ihrer Fassade und Ihre persönlichen Wünsche an.
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <strong>Langfristiger Schutz:</strong>
+                            Unsere Arbeit sieht nicht nur gut aus, sondern schützt Ihre Immobilie auch jahrelang vor Witterungseinflüssen.
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <strong>Vertrauen & Zuverlässigkeit:</strong>
+                            Termintreue und transparente Kommunikation sind für uns die Basis jeder erfolgreichen Zusammenarbeit.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container footer-grid">
+        <div class="footer-brand">
+            <div class="logo">GAZI RENOVIERUNG</div>
+            <p>Exklusive Fassadenrenovierung</p>
+        </div>
+        <div class="footer-contact">
+            <h5>Kontakt</h5>
+            <p>gazi.muenchen@gmail.com</p>
+            <p>0162 937 1220</p>
+            <p>Freisinger Str. 59 b 85221 Dachau</p>
+        </div>
+        <div class="footer-services">
+            <h5>Links</h5>
+            <p>Portfolio</p>
+            <p>Über uns</p>
+            <p>Kontakt</p>
+        </div>
+        <div class="footer-social">
+            <h5>Social Media</h5>
+            <div class="social-icons">
+                <a href="https://www.instagram.com/gazi_id/"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/gazmend.idrizi.18"><i class="fab fa-facebook-f"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="container footer-bottom">
+        <p>&copy; 2026 GAZI RENOVIERUNG. Alle Rechte vorbehalten.</p>
+        <p>Datenschutz</p>
+    </div>
+</footer>
+
+<script>
+    const menuToggle = document.getElementById('mobile-menu');
+    const navList = document.getElementById('nav-list');
+
+    if (menuToggle) {
+        menuToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            this.classList.toggle('open');
+            navList.classList.toggle('active');
+            document.body.classList.toggle('no-scroll');
+        });
+    }
+
+    document.querySelectorAll('#nav-list a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (menuToggle && menuToggle.classList.contains('open')) {
+                menuToggle.classList.remove('open');
+                navList.classList.remove('active');
+                document.body.classList.remove('no-scroll');
+            }
+        });
+    });
+</script>
+
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAZI RENOVIERUNG | Zeitlose Eleganz</title>
+    <link rel="icon" type="image/png" th:href="@{/img/Unnamed(Logo).png}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <style>
+        /* --- KORRIGJIMET PËR FIXED NAVBAR --- */
+        body {
+            padding-top: 80px;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 10000;
+            transition: all 0.3s ease;
+        }
+
+        .logo img {
+            max-height: 50px;
+            width: auto;
+            display: block;
+        }
+
+        /* LOADING SPINNER & ALERTS */
+        .btn-loading {
+            position: relative;
+            color: transparent !important;
+            pointer-events: none;
+        }
+
+        .btn-loading::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin: -10px 0 0 -10px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .alert-success {
+            background-color: #fcf9f2;
+            color: #b8860b;
+            padding: 15px;
+            border-left: 4px solid #b8860b;
+            margin-bottom: 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 60px;
+            }
+
+            .nav-container {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                position: relative;
+                width: 100%;
+                padding: 10px 15px;
+                z-index: 10001;
+            }
+
+            /* Sigurohemi qe logoja te jete mbi overlay */
+            .logo {
+                position: relative;
+                z-index: 10005;
+            }
+
+            .logo img {
+                max-height: 30px;
+            }
+
+            .menu-toggle {
+                display: flex !important;
+                flex-direction: row;
+                align-items: center;
+                cursor: pointer;
+                z-index: 10005; /* Ngritur mbi overlay */
+                position: relative;
+                flex-grow: 1;
+            }
+
+            .menu-toggle .logo {
+                font-size: 1rem;
+                white-space: nowrap;
+                font-family: 'Montserrat', sans-serif;
+                font-weight: 500;
+                letter-spacing: 1px;
+                margin-left: 10px;
+                flex-grow: 1;
+                text-align: left;
+            }
+
+            .hamburger-lines {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                margin-left: auto;
+            }
+
+            .menu-toggle span {
+                width: 25px;
+                height: 2px;
+                background-color: #1a1a1a;
+                transition: 0.3s ease;
+                display: block;
+            }
+
+            #nav-list.nav-links {
+                display: flex !important;
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 100%;
+                height: 100vh;
+                background-color: #ffffff;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+                z-index: 9998; /* Overlay qendron poshte logos/toggle */
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+
+            #nav-list.nav-links.active {
+                right: 0 !important;
+            }
+
+            .nav-links li {
+                margin: 20px 0;
+                opacity: 0;
+            }
+
+            .nav-links.active li {
+                opacity: 1;
+                transition: opacity 0.4s ease 0.3s;
+            }
+
+            .nav-links li a {
+                font-family: 'Playfair Display', serif;
+                font-size: 2rem;
+                color: #1a1a1a;
+                text-decoration: none;
+            }
+
+            .nav-cta {
+                display: none !important;
+            }
+
+            .menu-toggle.open .hamburger-lines span:nth-of-type(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+            .menu-toggle.open .hamburger-lines span:nth-of-type(2) {
+                opacity: 0;
+            }
+            .menu-toggle.open .hamburger-lines span:nth-of-type(3) {
+                transform: rotate(-45deg) translate(5px, -5px);
+            }
+
+            body.no-scroll {
+                overflow: hidden;
+            }
+        }
+
+        .renovation-focus {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .renovation-focus i {
+            font-size: 3rem;
+            color: #b8860b;
+            margin-bottom: 20px;
+        }
+        .renovation-focus p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #444;
+            font-family: 'Montserrat', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="container nav-container">
+        <div class="logo">
+            <a th:href="@{/}">
+                <img src="/img/logo.jpg" alt="Logo">
+            </a>
+        </div>
+
+        <div class="menu-toggle" id="mobile-menu">
+            <div class="logo">GAZI RENOVIERUNG</div>
+            <div class="hamburger-lines">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <nav>
+            <ul class="nav-links" id="nav-list">
+                <li><a th:href="@{/}" style="color: #b8860b;">Startseite</a></li>
+                <li><a th:href="@{/portfolio}">Portfolio</a></li>
+                <li><a href="#services">Leistungen</a></li>
+                <li><a href="#contact">Kontakt</a></li>
+                <li><a th:href="@{/aboutus}">Über uns</a></li>
+            </ul>
+        </nav>
+        <div class="nav-cta">
+            <a href="#contact" class="btn-outline">E-Mail senden</a>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="container hero-grid">
+            <div class="hero-text-box">
+                <h1>Zeitlose Eleganz neu definiert</h1>
+                <p>Spezialisiert auf die Restaurierung und Verschönerung klassischer Fassaden.</p>
+                <a th:href="@{/portfolio}" class="btn-gold">Unsere Projekte</a>
+            </div>
+            <div class="hero-image-wrapper"></div>
+        </div>
+    </section>
+
+    <section id="services" class="services-section">
+        <div class="container">
+            <h2 class="section-title">Unsere Expertise</h2>
+            <div class="renovation-focus">
+                <i class="fas fa-house-chimney-window"></i>
+                <h3>Exklusive Renovierung</h3>
+                <p>
+                    Wir verwandeln Ihre Vision in Realität. GAZI RENOVIERUNG steht für höchste Präzision bei der Modernisierung und Instandsetzung anspruchsvoller Fassaden. Mit einer Kombination aus traditionellem Handwerk und modernen Techniken sorgen wir dafür, dass der Wert und der Charakter Ihrer Immobilie nicht nur erhalten bleibt, sondern in neuem Glanz erstrahlt. Von der ersten Planung bis zum finalen Detail – wir sind Ihr Partner für zeitlose Eleganz.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="transformation-section">
+        <div class="container transformation-grid">
+            <div class="transformation-image">
+                <img src="/img/Unamed2.jpg" alt="Beratung">
+            </div>
+            <div class="transformation-form">
+                <h2>Verwandeln Sie Ihre Fassade</h2>
+                <p>Kontaktieren Sie uns noch heute für eine professionelle Beratung und Ihren individuellen Plan.</p>
+
+                <div th:if="${success}" class="alert-success">
+                    <i class="fas fa-check-circle"></i> <span th:text="${success}">Vielen Dank! Ihre Nachricht wurde erfolgreich versendet.</span>
+                </div>
+
+                <form id="contactForm" th:action="@{/contact}" method="post">
+                    <input type="text" name="name" placeholder="Name" required>
+                    <input type="email" name="email" placeholder="E-Mail" required>
+                    <textarea name="message" placeholder="Ihre Nachricht" rows="4" required></textarea>
+                    <button type="submit" id="submitBtn" class="btn-solid-gold">Jetzt Transformation starten</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container footer-grid">
+        <div class="footer-brand">
+            <div class="logo">GAZI RENOVIERUNG</div>
+            <p>Exklusive Fassadenrenovierung</p>
+        </div>
+        <div class="footer-contact">
+            <h5>Kontakt</h5>
+            <p>gazi.muenchen@gmail.com</p>
+            <p>0162 937 1220</p>
+            <p>Freisinger Str. 59 b 85221 Dachau</p>
+        </div>
+        <div class="footer-services">
+            <h5>Links</h5>
+            <p>Portfolio</p>
+            <p>Über uns</p>
+            <p>Kontakt</p>
+        </div>
+        <div class="footer-social">
+            <h5>Social Media</h5>
+            <div class="social-icons">
+                <a href="https://www.instagram.com/gazi_id/"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/gazmend.idrizi.18"><i class="fab fa-facebook-f"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="container footer-bottom">
+        <p>&copy; 2026 GAZI RENOVIERUNG. Alle Rechte vorbehalten.</p>
+        <p>Datenschutz</p>
+    </div>
+</footer>
+
+<script>
+    const menuToggle = document.getElementById('mobile-menu');
+    const navList = document.getElementById('nav-list');
+
+    if (menuToggle) {
+        menuToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            this.classList.toggle('open');
+            navList.classList.toggle('active');
+            document.body.classList.toggle('no-scroll');
+        });
+    }
+
+    const contactForm = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if(contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            submitBtn.classList.add('btn-loading');
+        });
+    }
+
+    document.querySelectorAll('#nav-list a').forEach(link => {
+        link.addEventListener('click', () => {
+            if(menuToggle && menuToggle.classList.contains('open')){
+                menuToggle.classList.remove('open');
+                navList.classList.remove('active');
+                document.body.classList.remove('no-scroll');
+            }
+        });
+    });
+</script>
+
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>
