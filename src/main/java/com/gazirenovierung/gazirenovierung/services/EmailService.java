@@ -3,6 +3,7 @@ package com.gazirenovierung.gazirenovierung.services;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -13,45 +14,70 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+    // Kjo e merr automatikisht emailin qe kemi vendos te Render
+    @Value("${spring.mail.username}")
+    private String senderEmail;
+
     public void sendContactEmail(String name, String email, String message) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-            // Professional HTML with GAZI RENOVIERUNG branding
+            // DIZAJNI YT LUKSOZ (I paprekur)
             String htmlContent =
-                    "<div style='font-family: Arial, sans-serif; background-color: #f8f8f8; padding: 20px;'>" +
-                            "<div style='max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #ddd; border-top: 5px solid #b8860b;'>" +
-                            // Header
-                            "<div style='padding: 20px; text-align: center; background: #1a1a1a;'>" +
-                            "<h1 style='color: #ffffff; margin: 0; font-size: 22px; letter-spacing: 3px;'>GAZI RENOVIERUNG</h1>" +
+                    "<div style='background-color: #ffffff; padding: 50px 20px; font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif; color: #1a1a1a;'>" +
+                            "<div style='max-width: 550px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 2px;'>" +
+
+                            // Header Minimalist
+                            "<div style='padding: 40px 20px; text-align: center; background-color: #1a1a1a;'>" +
+                            "<h1 style='color: #ffffff; margin: 0; font-size: 20px; letter-spacing: 5px; font-weight: 300; text-transform: uppercase;'>GAZI RENOVIERUNG</h1>" +
                             "</div>" +
-                            // Body
-                            "<div style='padding: 30px;'>" +
-                            "<h3 style='color: #1a1a1a; border-bottom: 1px solid #eee; padding-bottom: 10px;'>New Client Inquiry</h3>" +
-                            "<p style='margin: 10px 0;'><strong>Name:</strong> " + name + "</p>" +
-                            "<p style='margin: 10px 0;'><strong>Email:</strong> <a href='mailto:" + email + "' style='color: #b8860b;'>" + email + "</a></p>" +
-                            "<div style='margin-top: 20px; padding: 15px; background: #fafafa; border-left: 3px solid #b8860b;'>" +
-                            "<strong>Message:</strong><br><br>" + message.replace("\n", "<br>") +
+
+                            // Content Area
+                            "<div style='padding: 50px 40px;'>" +
+                            "<p style='font-size: 13px; color: #b8860b; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; font-weight: bold;'>New Inquiry</p>" +
+                            "<h2 style='font-size: 24px; margin: 0 0 30px 0; font-weight: 300; color: #1a1a1a;'>Client Message</h2>" +
+
+                            "<div style='margin-bottom: 40px; font-size: 15px; line-height: 1.8; color: #444;'>" +
+                            "<div style='margin-bottom: 15px; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px;'>" +
+                            "<span style='color: #999; width: 80px; display: inline-block; font-size: 12px; text-transform: uppercase;'>From</span>" +
+                            "<strong style='color: #1a1a1a;'>" + name + "</strong>" +
+                            "</div>" +
+                            "<div style='margin-bottom: 15px; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px;'>" +
+                            "<span style='color: #999; width: 80px; display: inline-block; font-size: 12px; text-transform: uppercase;'>Email</span>" +
+                            "<a href='mailto:" + email + "' style='color: #1a1a1a; text-decoration: none; border-bottom: 1px solid #b8860b;'>" + email + "</a>" +
+                            "</div>" +
+                            "<div style='margin-top: 30px;'>" +
+                            "<span style='color: #999; font-size: 12px; text-transform: uppercase; display: block; margin-bottom: 10px;'>Message</span>" +
+                            "<div style='color: #1a1a1a; white-space: pre-wrap;'>" + message + "</div>" +
                             "</div>" +
                             "</div>" +
-                            // Footer
-                            "<div style='padding: 15px; text-align: center; background: #f1f1f1; font-size: 11px; color: #777;'>" +
-                            "This inquiry was generated from the GAZI RENOVIERUNG contact form." +
+
+                            // Button
+                            "<div style='text-align: center; margin-top: 50px;'>" +
+                            "<a href='mailto:" + email + "' style='background-color: #1a1a1a; color: #ffffff; padding: 15px 35px; text-decoration: none; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; border-radius: 0px;'>Reply to Client</a>" +
+                            "</div>" +
+                            "</div>" +
+
+                            // Minimal Footer
+                            "<div style='padding: 30px; background-color: #fafafa; text-align: center; border-top: 1px solid #f0f0f0;'>" +
+                            "<p style='font-size: 10px; color: #aaa; letter-spacing: 1px; margin: 0;'>GAZI RENOVIERUNG &bull; 2026 OFFICIAL SYSTEM</p>" +
                             "</div>" +
                             "</div>" +
                             "</div>";
 
-            helper.setFrom("Ardihyseni45@gmail.com"); // MUST match your spring.mail.username
-            helper.setTo("Ardihyseni988@gmail.com");    // ALWAYS goes to your Gmail
-            helper.setSubject("New Lead: " + name);
+            helper.setFrom(senderEmail);
+            helper.setTo("Ardihyseni988@gmail.com");
+            helper.setSubject("New Project Inquiry - " + name);
             helper.setText(htmlContent, true);
-            helper.setReplyTo(email); // Click 'Reply' in Gmail to respond directly to the client
+            helper.setReplyTo(email);
 
             mailSender.send(mimeMessage);
+            System.out.println("SUCCESS: Email sen succsesfully");
 
-        } catch (MessagingException e) {
-            e.printStackTrace(); // Check your IDE console if it fails!
+        } catch (Exception e) {
+            System.err.println("CRITICAL ERROR: Email failed! Check: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
