@@ -94,8 +94,8 @@ body {
 /* --- UPDATED Hero Section (Full Background Image) --- */
 .hero {
     position: relative;
-    min-height: 85vh;
-    background-image: url('/img/unamed.png');
+    min-height: 93vh;
+    background-image: url('/img/unnamed-Picsart-AiImageEnhancer (13).jpg');
     background-size: cover;
     background-position: center right;
     display: flex;
@@ -112,7 +112,7 @@ body {
     height: 100%;
     background: linear-gradient(to right,
     rgba(255,255,255,1) 0%,
-    rgba(255,255,255,0.85) 35%,
+    rgba(255,255,255,0.85) 20%,
     rgba(255,255,255,0) 100%);
     z-index: 1;
 }
@@ -369,7 +369,7 @@ body {
         padding: 40px 0;
     }
     .hero-overlay {
-        background: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.8) 20%;
     }
     .hero-grid {
         grid-template-columns: 1fr;
