@@ -384,3 +384,14 @@ body {
     .nav-links, .nav-cta { display: none; }
     .transformation-grid { gap: 40px; }
 }
+
+.footer-services a {
+    color: inherit;         /* Merr ngjyrën e tekstit që ka <p> */
+    text-decoration: none;  /* Heq vijën poshtë */
+    transition: 0.3s;       /* E bën ndryshimin e ngjyrës më të butë */
+}
+
+.footer-services a:hover {
+    color: #ffcc00;         /* Zgjidh një ngjyrë që i përshtatet GAZI RENOVIERUNG kur e prek me maus */
+    text-decoration: underline;
+}

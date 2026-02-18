@@ -177,6 +177,33 @@
             .offer-text h2 { font-size: 2.2rem; }
             .about-intro h1 { font-size: 2.2rem; }
         }
+        /* Footer */
+        .logoo {
+            /* Përdorimi i një fonti 'Serif' për pamje klasike */
+            font-family: 'Playfair Display', 'Times New Roman', serif;
+            margin-bottom: 20px;
+
+            /* Madhësia e shkronjave */
+            font-size: 28px;
+
+            /* Trashësia e shkronjave */
+            font-weight: 700;
+
+            /* Shkronjat e mëdha (si në foto) */
+            text-transform: uppercase;
+
+            /* Hapësira mes shkronjave (Kritike për këtë dizajn) */
+            letter-spacing: 2px;
+
+            /* Ngjyra e errët e hirtë/zi */
+            color: #1a1a1a;
+
+            /* Rregullimi i linjës */
+            line-height: 1.2;
+
+            /* Opsionale: Kursive nëse dëshiron saktësisht si logoja */
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
@@ -305,7 +332,7 @@
 <footer class="footer">
     <div class="container footer-grid">
         <div class="footer-brand">
-            <div class="logo">GAZI RENOVIERUNG</div>
+            <div class="logoo">GAZI RENOVIERUNG</div>
             <p>Exklusive Fassadenrenovierung</p>
         </div>
         <div class="footer-contact">
@@ -316,9 +343,10 @@
         </div>
         <div class="footer-services">
             <h5>Links</h5>
-            <p>Portfolio</p>
-            <p>Über uns</p>
-            <p>Kontakt</p>
+            <p><a th:href="@{/}">Home</a></p>
+            <p><a th:href="@{/portfolio}">Portfolio</a></p>
+            <p><a th:href="@{/aboutus}">Über uns</a></p>
+            <p><a th:href="@{/#contact}">Kontakt</a></p>
         </div>
         <div class="footer-social">
             <h5>Social Media</h5>
