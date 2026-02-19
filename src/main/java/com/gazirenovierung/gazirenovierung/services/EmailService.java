@@ -14,7 +14,6 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    // Kjo e merr automatikisht emailin qe kemi vendos te Render
     @Value("${spring.mail.username}")
     private String senderEmail;
 
@@ -23,21 +22,15 @@ public class EmailService {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-            // DIZAJNI YT LUKSOZ (I paprekur)
             String htmlContent =
                     "<div style='background-color: #ffffff; padding: 50px 20px; font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif; color: #1a1a1a;'>" +
                             "<div style='max-width: 550px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 2px;'>" +
-
-                            // Header Minimalist
                             "<div style='padding: 40px 20px; text-align: center; background-color: #1a1a1a;'>" +
                             "<h1 style='color: #ffffff; margin: 0; font-size: 20px; letter-spacing: 5px; font-weight: 300; text-transform: uppercase;'>GAZI RENOVIERUNG</h1>" +
                             "</div>" +
-
-                            // Content Area
                             "<div style='padding: 50px 40px;'>" +
                             "<p style='font-size: 13px; color: #b8860b; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; font-weight: bold;'>New Inquiry</p>" +
                             "<h2 style='font-size: 24px; margin: 0 0 30px 0; font-weight: 300; color: #1a1a1a;'>Client Message</h2>" +
-
                             "<div style='margin-bottom: 40px; font-size: 15px; line-height: 1.8; color: #444;'>" +
                             "<div style='margin-bottom: 15px; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px;'>" +
                             "<span style='color: #999; width: 80px; display: inline-block; font-size: 12px; text-transform: uppercase;'>From</span>" +
@@ -52,14 +45,10 @@ public class EmailService {
                             "<div style='color: #1a1a1a; white-space: pre-wrap;'>" + message + "</div>" +
                             "</div>" +
                             "</div>" +
-
-                            // Button
                             "<div style='text-align: center; margin-top: 50px;'>" +
                             "<a href='mailto:" + email + "' style='background-color: #1a1a1a; color: #ffffff; padding: 15px 35px; text-decoration: none; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; border-radius: 0px;'>Reply to Client</a>" +
                             "</div>" +
                             "</div>" +
-
-                            // Minimal Footer
                             "<div style='padding: 30px; background-color: #fafafa; text-align: center; border-top: 1px solid #f0f0f0;'>" +
                             "<p style='font-size: 10px; color: #aaa; letter-spacing: 1px; margin: 0;'>GAZI RENOVIERUNG &bull; 2026 OFFICIAL SYSTEM</p>" +
                             "</div>" +
@@ -67,15 +56,13 @@ public class EmailService {
                             "</div>";
 
             helper.setFrom(senderEmail, "Gazi Renovierung");
-            helper.setTo("Ardihyseni988@gmail.com");
+            helper.setTo(senderEmail); // TASH SHKON TE ARDIHYSENI45@GMAIL.COM
             helper.setSubject("New Project Inquiry - " + name);
             helper.setText(htmlContent, true);
             helper.setReplyTo(email);
 
-            helper.setText(htmlContent, true);
-
             mailSender.send(mimeMessage);
-            System.out.println("SUCCESS: Email sen succsesfully");
+            System.out.println("SUCCESS: Email sent to " + senderEmail);
 
         } catch (Exception e) {
             System.err.println("CRITICAL ERROR: Email failed! Check: " + e.getMessage());
