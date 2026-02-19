@@ -351,7 +351,7 @@
     const navList = document.getElementById('nav-list');
     const navLinks = document.querySelectorAll('#nav-list a');
 
-    // Menaxhimi i menusë dhe linkut aktiv - MOS NDRYSHO
+    // --- MENAXHIMI I MENUSË (I PAPREKUR) ---
     navLinks.forEach(link => {
         link.addEventListener('click', function () {
             navLinks.forEach(l => l.classList.remove('active-link'));
@@ -374,7 +374,7 @@
         });
     }
 
-    // --- PJESA E EMAILIT - E KORRIGJUAR PËR RENDER ---
+    // --- PJESA E EMAILIT (E KORRIGJUAR PËR RENDER) ---
     const contactForm = document.getElementById('contactForm');
     const submitBtn = document.getElementById('submitBtn');
 
@@ -382,38 +382,61 @@
         contactForm.addEventListener('submit', function (e) {
             e.preventDefault();
 
+            // Start loading
             submitBtn.classList.add('btn-loading');
+            submitBtn.disabled = true;
 
-            // Dërgimi real te serveri
-            fetch(this.action, {
+            const formData = new FormData(this);
+            const actionUrl = this.getAttribute('action'); // Merr /contact nga Thymeleaf
+
+            fetch(actionUrl, {
                 method: 'POST',
-                body: new FormData(this),
+                body: formData,
                 headers: {
                     'Accept': 'application/json'
                 }
             })
                 .then(response => {
-                    console.log("Server responded");
+                    submitBtn.classList.remove('btn-loading');
+                    submitBtn.disabled = false;
+
+                    // Kontrollojmë nëse serveri e pranoi kërkesën (200 OK ose Redirect)
+                    if (response.ok || response.redirected) {
+                        shfaqAlert('Vielen Dank! Ihre Nachricht wurde erfolgreich versendet.', 'alert-success');
+                        contactForm.reset();
+                    } else {
+                        // Kjo do të të tregojë nëse është 404 apo 500
+                        shfaqAlert('Gabim: Serveri u përgjigj me status ' + response.status, 'alert-error');
+                    }
                 })
                 .catch(err => {
-                    console.log("Fetch error, but showing success anyway per logic");
+                    submitBtn.classList.remove('btn-loading');
+                    submitBtn.disabled = false;
+                    shfaqAlert('Lidhja dështoi. Kontrolloni rrjetin.', 'alert-error');
+                    console.error("Fetch error:", err);
                 });
-
-            // Logjika jote e shfaqjes së mesazhit pas 1 sekonde (E PAPREKUR)
-            setTimeout(() => {
-                submitBtn.classList.remove('btn-loading');
-
-                const successMsg = document.createElement('div');
-                successMsg.className = 'alert-success';
-                successMsg.style.marginTop = "20px";
-                successMsg.innerHTML = '<i class="fas fa-check-circle"></i> Vielen Dank! Ihre Nachricht wurde erfolgreich versendet.';
-
-                contactForm.prepend(successMsg);
-                contactForm.reset();
-
-                setTimeout(() => { successMsg.remove(); }, 5000);
-            }, 1000);
         });
+    }
+
+    // Funksion për mesazhet që të mos prishin stilin tënd
+    function shfaqAlert(teksti, klasa) {
+        const oldAlert = contactForm.querySelector('.alert-success, .alert-error');
+        if (oldAlert) oldAlert.remove();
+
+        const alertDiv = document.createElement('div');
+        alertDiv.className = klasa;
+        alertDiv.style.marginTop = "20px";
+        alertDiv.style.padding = "15px";
+        alertDiv.style.borderLeft = "4px solid " + (klasa === 'alert-success' ? '#b8860b' : '#ff0000');
+        alertDiv.style.fontFamily = 'Montserrat, sans-serif';
+        alertDiv.style.fontSize = '0.9rem';
+        alertDiv.style.backgroundColor = (klasa === 'alert-success' ? '#fcf9f2' : '#fff5f5');
+
+        alertDiv.innerHTML = '<i class="fas ' + (klasa === 'alert-success' ? 'fa-check-circle' : 'fa-exclamation-circle') + '"></i> ' + teksti;
+
+        contactForm.prepend(alertDiv);
+
+        setTimeout(() => { if (alertDiv) alertDiv.remove(); }, 6000);
     }
 </script>
 
