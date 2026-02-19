@@ -302,11 +302,28 @@
                     <i class="fas fa-check-circle"></i> <span th:text="${success}">Vielen Dank! Ihre Nachricht wurde erfolgreich versendet.</span>
                 </div>
 
-                <form id="contactForm" th:action="@{/contact}" method="post">
-                    <input type="text" name="name" placeholder="Name" required>
-                    <input type="email" name="email" placeholder="E-Mail" required>
-                    <textarea name="message" placeholder="Ihre Nachricht" rows="4" required></textarea>
-                    <button type="submit" id="submitBtn" class="btn-solid-gold">Jetzt Transformation starten</button>
+                <form id="contactForm" action="https://formspree.io/f/xqedlnzg" method="POST">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <input type="text" name="name" class="form-control bg-dark border-0 text-white py-3" placeholder="Emri juaj" required>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="email" name="_replyto" class="form-control bg-dark border-0 text-white py-3" placeholder="Email-i juaj" required>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" name="phone" class="form-control bg-dark border-0 text-white py-3" placeholder="Numri i telefonit">
+                        </div>
+                        <div class="col-md-12">
+                            <textarea name="message" class="form-control bg-dark border-0 text-white py-3" rows="6" placeholder="Mesazhi juaj" required></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn-transform-unique"
+                                    style="background-color: #C5A059 !important; color: #ffffff !important; border: none !important; border-radius: 0px !important; padding: 22px 30px !important; font-family: 'Arial', sans-serif !important; font-weight: 600 !important; font-size: 13px !important; text-transform: uppercase !important; letter-spacing: 2px !important; width: 100% !important; cursor: pointer; display: block; line-height: 1.2;">
+                                JETZT TRANSFORMATION STARTEN
+                            </button>
+                        </div>
+                    </div>
+                    <div id="status-msg"></div>
                 </form>
             </div>
         </div>
@@ -347,11 +364,11 @@
 </footer>
 
 <script>
+    // --- MENAXHIMI I MENUSË (I PAPREKUR) ---
     const menuToggle = document.getElementById('mobile-menu');
     const navList = document.getElementById('nav-list');
     const navLinks = document.querySelectorAll('#nav-list a');
 
-    // --- MENAXHIMI I MENUSË (I PAPREKUR) ---
     navLinks.forEach(link => {
         link.addEventListener('click', function () {
             navLinks.forEach(l => l.classList.remove('active-link'));
@@ -374,69 +391,63 @@
         });
     }
 
-    // --- PJESA E EMAILIT (E KORRIGJUAR PËR RENDER) ---
-    const contactForm = document.getElementById('contactForm');
-    const submitBtn = document.getElementById('submitBtn');
+    // --- PJESA E EMAILIT (E RREGULLUAR QË TË MOS BËJË REDIRECT) ---
+    const form = document.getElementById("contactForm");
 
-    if (contactForm) {
-        contactForm.addEventListener('submit', function (e) {
-            e.preventDefault();
+    if (form) {
+        form.addEventListener("submit", function (event) {
+            event.preventDefault(); // NDALON REDIRECT-IN 100%
 
-            // Start loading
-            submitBtn.classList.add('btn-loading');
-            submitBtn.disabled = true;
+            // Krijojmë një div për statusin nëse nuk ekziston në HTML
+            let status = document.getElementById("status-msg");
+            if (!status) {
+                status = document.createElement("div");
+                status.id = "status-msg";
+                form.appendChild(status);
+            }
 
-            const formData = new FormData(this);
-            const actionUrl = this.getAttribute('action'); // Merr /contact nga Thymeleaf
+            const btn = event.target.querySelector(".btn-transform-unique");
+            const data = new FormData(event.target);
 
-            fetch(actionUrl, {
-                method: 'POST',
-                body: formData,
+            // Gjendja gjatë dërgimit
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "WIRD GESENDET...";
+            btn.disabled = true;
+
+            fetch(event.target.action, {
+                method: form.method,
+                body: data,
                 headers: {
                     'Accept': 'application/json'
                 }
-            })
-                .then(response => {
-                    submitBtn.classList.remove('btn-loading');
-                    submitBtn.disabled = false;
+            }).then(response => {
+                if (response.ok) {
+                    // 1. Falenderimi me stil Gold (Fiks si dizajni i butonit)
+                    status.innerHTML = "VIELEN DANK! IHRE NACHRICHT WURDE ERFOLGREICH VERSENDET.";
+                    status.style.cssText = "color: #C5A059; font-weight: 600; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; margin-top: 25px; text-align: center; font-family: 'Arial', sans-serif; display: block;";
 
-                    // Kontrollojmë nëse serveri e pranoi kërkesën (200 OK ose Redirect)
-                    if (response.ok || response.redirected) {
-                        shfaqAlert('Vielen Dank! Ihre Nachricht wurde erfolgreich versendet.', 'alert-success');
-                        contactForm.reset();
-                    } else {
-                        // Kjo do të të tregojë nëse është 404 apo 500
-                        shfaqAlert('Gabim: Serveri u përgjigj me status ' + response.status, 'alert-error');
-                    }
-                })
-                .catch(err => {
-                    submitBtn.classList.remove('btn-loading');
-                    submitBtn.disabled = false;
-                    shfaqAlert('Lidhja dështoi. Kontrolloni rrjetin.', 'alert-error');
-                    console.error("Fetch error:", err);
-                });
+                    // 2. PASTRIMI I INPUTEVE (Emri, Email, etj.)
+                    form.reset();
+                } else {
+                    status.innerHTML = "OOPS! ETWAS IST SCHIEF GELAUFEN.";
+                    status.style.cssText = "color: #ff0000; font-weight: 600; font-size: 13px; margin-top: 25px; text-align: center; text-transform: uppercase;";
+                }
+            }).catch(error => {
+                status.innerHTML = "VERBINDUNGSFEHLER!";
+                status.style.color = "red";
+            }).finally(() => {
+                // Kthejmë butonin në gjendje normale pas 2 sekondave
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }, 1000);
+
+                // Mesazhi i falenderimit zhduket pas 6 sekondave
+                setTimeout(() => {
+                    status.innerHTML = "";
+                }, 6000);
+            });
         });
-    }
-
-    // Funksion për mesazhet që të mos prishin stilin tënd
-    function shfaqAlert(teksti, klasa) {
-        const oldAlert = contactForm.querySelector('.alert-success, .alert-error');
-        if (oldAlert) oldAlert.remove();
-
-        const alertDiv = document.createElement('div');
-        alertDiv.className = klasa;
-        alertDiv.style.marginTop = "20px";
-        alertDiv.style.padding = "15px";
-        alertDiv.style.borderLeft = "4px solid " + (klasa === 'alert-success' ? '#b8860b' : '#ff0000');
-        alertDiv.style.fontFamily = 'Montserrat, sans-serif';
-        alertDiv.style.fontSize = '0.9rem';
-        alertDiv.style.backgroundColor = (klasa === 'alert-success' ? '#fcf9f2' : '#fff5f5');
-
-        alertDiv.innerHTML = '<i class="fas ' + (klasa === 'alert-success' ? 'fa-check-circle' : 'fa-exclamation-circle') + '"></i> ' + teksti;
-
-        contactForm.prepend(alertDiv);
-
-        setTimeout(() => { if (alertDiv) alertDiv.remove(); }, 6000);
     }
 </script>
 
