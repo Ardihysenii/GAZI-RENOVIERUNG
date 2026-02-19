@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAZI RENOVIERUNG | Zeitlose Eleganz</title>
+    <title>GAZI RENOVIERUNG | Ihr Experte für Modernisierung</title>
     <link rel="icon" type="image/png" th:href="@{/img/Unnamed(Logo).png}">
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -302,20 +302,26 @@
                     <i class="fas fa-check-circle"></i> <span th:text="${success}">Vielen Dank! Ihre Nachricht wurde erfolgreich versendet.</span>
                 </div>
 
-                <form id="contactForm" action="https://formspree.io/f/xqedlnzg" method="POST">
+                <form id="contactForm" action="https://formspree.io/f/mojnlgkw" method="POST">
                     <div class="row g-4">
                         <div class="col-md-6">
                             <input type="text" name="name" class="form-control bg-dark border-0 text-white py-3" placeholder="Emri juaj" required>
                         </div>
+
                         <div class="col-md-6">
                             <input type="email" name="_replyto" class="form-control bg-dark border-0 text-white py-3" placeholder="Email-i juaj" required>
                         </div>
+
                         <div class="col-md-12">
                             <input type="text" name="phone" class="form-control bg-dark border-0 text-white py-3" placeholder="Numri i telefonit">
                         </div>
+
                         <div class="col-md-12">
                             <textarea name="message" class="form-control bg-dark border-0 text-white py-3" rows="6" placeholder="Mesazhi juaj" required></textarea>
                         </div>
+
+                        <input type="text" name="_gotcha" style="display:none">
+
                         <div class="col-12">
                             <button type="submit" class="btn-transform-unique"
                                     style="background-color: #C5A059 !important; color: #ffffff !important; border: none !important; border-radius: 0px !important; padding: 22px 30px !important; font-family: 'Arial', sans-serif !important; font-weight: 600 !important; font-size: 13px !important; text-transform: uppercase !important; letter-spacing: 2px !important; width: 100% !important; cursor: pointer; display: block; line-height: 1.2;">
@@ -323,6 +329,7 @@
                             </button>
                         </div>
                     </div>
+
                     <div id="status-msg"></div>
                 </form>
             </div>
