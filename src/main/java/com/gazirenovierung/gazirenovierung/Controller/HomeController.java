@@ -53,13 +53,23 @@ public class HomeController {
                                 @RequestParam String email,
                                 @RequestParam String message,
                                 RedirectAttributes redirectAttributes) {
+
+        // KJO DO TË DALË TE RENDER LOGS NËSE KËRKESA ARRIN
+        System.out.println("--- KËRKESË E RE PËR EMAIL ---");
+        System.out.println("Emri: " + name);
+        System.out.println("Email: " + email);
+
         try {
-            // This calls the professional HTML service we created
             emailService.sendContactEmail(name, email, message);
+            System.out.println("SUCCESS: Emaili u dërgua nga Service!");
             redirectAttributes.addFlashAttribute("success", "Message sent successfully!");
         } catch (Exception e) {
+            System.out.println("ERROR: Dështoi dërgimi! Arsyeja: " + e.getMessage());
+            e.printStackTrace(); // Kjo nxjerr krejt gabimin teknik te logs
             redirectAttributes.addFlashAttribute("error", "Failed to send message: " + e.getMessage());
         }
-        return "redirect:/#contact";
+
+        // Për Render, kur përdorim JavaScript, kjo është më e sigurt
+        return "index";
     }
 }
