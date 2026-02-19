@@ -66,11 +66,13 @@ public class EmailService {
                             "</div>" +
                             "</div>";
 
-            helper.setFrom(senderEmail);
+            helper.setFrom(senderEmail, "Gazi Renovierung");
             helper.setTo("Ardihyseni988@gmail.com");
             helper.setSubject("New Project Inquiry - " + name);
             helper.setText(htmlContent, true);
             helper.setReplyTo(email);
+
+            helper.setText(htmlContent, true);
 
             mailSender.send(mimeMessage);
             System.out.println("SUCCESS: Email sen succsesfully");
